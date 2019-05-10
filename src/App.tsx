@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+/** @jsx jsx */
+import { css, jsx } from '@emotion/core';
+import Home from './pages/home';
+import Code from './pages/code';
+import Blog from './pages/blog';
+import Resume from './pages/resume';
+import Layout from './Layout';
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      css={css`
+        background-color: #111;
+        color: #eee;
+        font-size: 16px;
+        font-family: 'Roboto', sans-serif;
+        height: 100vh;
+        overflow: hidden;
+        width: 100vw;
+      `}
+    >
+      <Layout>
+        <Home path="/" />
+        <Code path="/code" />
+        <Blog path="/blog" />
+        <Resume path="/resume" />
+      </Layout>
     </div>
   );
 }
-
-export default App;
