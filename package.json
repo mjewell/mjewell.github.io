@@ -9,8 +9,10 @@
     "gh-pages": "^2.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-icons": "^3.6.1",
     "react-pose": "^4.0.8",
     "react-scripts": "3.0.0",
+    "react-sidebar": "^3.0.2",
     "typescript": "^3.4.5"
   },
   "scripts": {
@@ -38,6 +40,7 @@
   },
   "devDependencies": {
     "@types/reach__router": "^1.2.4",
-    "@types/react": "^16.8.16"
+    "@types/react": "^16.8.16",
+    "@types/react-sidebar": "^3.0.0"
   }
 }
