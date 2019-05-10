@@ -1,6 +1,8 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import Home from './pages/home';
+import Code from './pages/code';
+import Blog from './pages/blog';
 import Resume from './pages/resume';
 import Layout from './Layout';
 
@@ -19,6 +21,8 @@ export default function App() {
     >
       <Layout>
         <Home path="/" />
+        <Code path="/code" />
+        <Blog path="/blog" />
         <Resume path="/resume" />
       </Layout>
     </div>
