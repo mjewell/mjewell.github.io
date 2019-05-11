@@ -14,7 +14,7 @@ export default function App() {
         color: #eee;
         font-size: 16px;
         font-family: 'Roboto', sans-serif;
-        height: 100vh;
+        min-height: 100vh;
         overflow: hidden;
         width: 100vw;
       `}
