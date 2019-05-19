@@ -9,7 +9,7 @@ function Row({
   label
 }: {
   Icon: any;
-  text: string;
+  text: React.ReactNode;
   label: string;
 }) {
   return (
@@ -54,6 +54,7 @@ export default function PreviewView() {
       <div
         css={css`
           align-items: center;
+          background-color: #e9e8e9;
           color: #111;
           display: flex;
           height: 100%;
@@ -62,16 +63,21 @@ export default function PreviewView() {
       >
         <div
           css={css`
-            width: 350px;
-            height: 600px;
             background-color: #fff;
+            border-radius: 3px;
+            box-shadow: 0 1px 1px 0 rgba(60, 64, 67, 0.08),
+              0 1px 3px 1px rgba(60, 64, 67, 0.16);
+            height: 600px;
+            width: 350px;
           `}
         >
           <div
             css={css`
-              width: 350px;
-              height: 200px;
               background-color: #aaa;
+              border-top-left-radius: 3px;
+              border-top-right-radius: 3px;
+              height: 200px;
+              width: 350px;
             `}
           />
           <div
@@ -89,8 +95,20 @@ export default function PreviewView() {
               Michael Jewell
             </h1>
             <Row Icon={FaMapMarkerAlt} label="Location" text="Santa Barbara" />
-            <Row Icon={FaAt} label="Email" text="michaeljewell9911@gmail.com" />
-            <Row Icon={FaPhone} label="Phone" text="(805) 284-1748" />
+            <Row
+              Icon={FaAt}
+              label="Email"
+              text={
+                <a href="mailto:michaeljewell9911@gmail.com">
+                  michaeljewell9911@gmail.com
+                </a>
+              }
+            />
+            <Row
+              Icon={FaPhone}
+              label="Phone"
+              text={<a href="tel:+18052841748">(805) 284-1748</a>}
+            />
           </div>
         </div>
       </div>
