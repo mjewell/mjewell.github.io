@@ -6,7 +6,9 @@
   "dependencies": {
     "@emotion/core": "^10.0.10",
     "@reach/router": "^1.2.1",
+    "@types/qs": "^6.5.3",
     "gh-pages": "^2.0.1",
+    "qs": "^6.7.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-icons": "^3.6.1",

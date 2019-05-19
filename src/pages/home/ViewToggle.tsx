@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
+import { navigate } from '@reach/router';
 import Toggle from 'react-toggle';
 import 'react-toggle/style.css';
 
@@ -18,9 +19,11 @@ const ViewToggle: React.FunctionComponent<{
     >
       <Toggle
         checked={view === 'preview'}
-        onChange={(e: { target: { checked: boolean } }) =>
-          onChange(e.target.checked ? 'preview' : 'code')
-        }
+        onChange={(e: { target: { checked: boolean } }) => {
+          const newView = e.target.checked ? 'preview' : 'code';
+          navigate(newView === 'code' ? '.' : `.?view=${newView}`);
+          onChange(newView);
+        }}
         icons={false}
       />
     </div>
