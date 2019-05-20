@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Fragment, useRef } from 'react';
-import useAvailableHeight from './utils/useAvailableHeight';
+import useAvailableHeight from '../utils/useAvailableHeight';
 import { SpecialCharacters, ClassDefinition, Prop } from './Code';
 import LineOfCode from './LineOfCode';
 

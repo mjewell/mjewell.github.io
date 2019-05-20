@@ -2,51 +2,7 @@
 import { css, jsx } from '@emotion/core';
 import { FaAt, FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
 import AvailableHeight from './AvailableHeight';
-
-function Row({
-  Icon,
-  text,
-  label
-}: {
-  Icon: any;
-  text: React.ReactNode;
-  label: string;
-}) {
-  return (
-    <div
-      css={css`
-        display: flex;
-        flex-direction: row;
-        margin-bottom: 1.5rem;
-      `}
-    >
-      <div
-        css={css`
-          width: 40px;
-          margin-right: 1rem;
-        `}
-      >
-        <Icon
-          css={css`
-            color: #0f89e2;
-            font-size: 2.5rem;
-          `}
-        />
-      </div>
-      <div>
-        <div>{text}</div>
-        <div
-          css={css`
-            color: #777;
-            font-size: 1rem;
-          `}
-        >
-          {label}
-        </div>
-      </div>
-    </div>
-  );
-}
+import Row from './Row';
 
 export default function PreviewView() {
   return (
@@ -94,12 +50,28 @@ export default function PreviewView() {
             >
               Michael Jewell
             </h1>
-            <Row Icon={FaMapMarkerAlt} label="Location" text="Santa Barbara" />
+            <Row
+              Icon={FaMapMarkerAlt}
+              label="Location"
+              text={
+                <a
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  href="https://www.google.com/maps?q=santa+barbara&um=1&ie=UTF-8&sa=X&ved=0ahUKEwi88Y6D5KjiAhUGXKwKHakCB7MQ_AUIDigB"
+                >
+                  Santa Barbara, CA
+                </a>
+              }
+            />
             <Row
               Icon={FaAt}
               label="Email"
               text={
-                <a href="mailto:michaeljewell9911@gmail.com">
+                <a
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  href="mailto:michaeljewell9911@gmail.com"
+                >
                   michaeljewell9911@gmail.com
                 </a>
               }

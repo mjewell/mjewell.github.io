@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import { useRef } from 'react';
-import useAvailableHeight from './utils/useAvailableHeight';
+import useAvailableHeight from '../utils/useAvailableHeight';
 
 const AvailableHeight: React.FunctionComponent<{}> = ({ children }) => {
   const containerElement = useRef(null) as any;
