@@ -3,22 +3,12 @@ import { css, jsx } from '@emotion/core';
 import { useState } from 'react';
 import Media from 'react-media';
 import 'react-toggle/style.css';
-import qs from 'qs';
 import CodeView from './CodeView';
 import PreviewView from './PreviewView';
 import ViewToggle from './ViewToggle';
+import getViewFromQueryString from './utils/getViewFromQueryString';
 
-const breakpoint = 1300;
-
-function getViewFromQueryString() {
-  const queryStringView = qs.parse(window.location.search.slice(1)).view;
-
-  if (['code', 'preview'].includes(queryStringView)) {
-    return queryStringView;
-  }
-
-  return 'code';
-}
+const breakpoint = 1200;
 
 export default function HomePage({ path }: { path: string }) {
   const [view, setView] = useState<'code' | 'preview'>(

@@ -18,7 +18,7 @@ const linesOfCode = [
   </Fragment>,
   <Prop propName="name" propValue="Michael Jewell" />,
   <Prop propName="location" propValue="Santa Barbara, CA" />,
-  <Prop propName="email" propValue="michaeljewell9911@gmail.com" />,
+  <Prop propName="email" propValue="mjewelldev@gmail.com" />,
   <Prop propName="phone" propValue="(805) 284-1748" />,
   <SpecialCharacters>{'/>'}</SpecialCharacters>
 ];

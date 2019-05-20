@@ -70,9 +70,9 @@ export default function PreviewView() {
                 <a
                   rel="noopener noreferrer"
                   target="_blank"
-                  href="mailto:michaeljewell9911@gmail.com"
+                  href="mailto:mjewelldev@gmail.com"
                 >
-                  michaeljewell9911@gmail.com
+                  mjewelldev@gmail.com
                 </a>
               }
             />
