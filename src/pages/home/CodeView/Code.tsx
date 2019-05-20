@@ -60,7 +60,7 @@ export const Prop: FunctionComponent<{
         margin-left: 1.5rem;
       `}
     >
-      <PropName>"{propName}"</PropName>: <PropValue>"{propValue}"</PropValue>
+      <PropName>{propName}</PropName>=<PropValue>"{propValue}"</PropValue>
     </span>
   );
 };
