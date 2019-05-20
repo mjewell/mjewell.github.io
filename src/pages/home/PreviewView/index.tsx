@@ -3,6 +3,7 @@ import { css, jsx } from '@emotion/core';
 import { FaAt, FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
 import AvailableHeight from './AvailableHeight';
 import Row from './Row';
+import coverPhoto from './mjewell.jpg';
 
 export default function PreviewView() {
   return (
@@ -27,14 +28,17 @@ export default function PreviewView() {
             width: 350px;
           `}
         >
-          <div
+          <img
             css={css`
-              background-color: #aaa;
               border-top-left-radius: 3px;
               border-top-right-radius: 3px;
-              height: 200px;
+              height: 300px;
+              object-fit: cover;
+              object-position: 0 0;
               width: 350px;
             `}
+            src={coverPhoto}
+            alt="Michael Jewell (and Growler)"
           />
           <div
             css={css`
@@ -45,7 +49,8 @@ export default function PreviewView() {
             <h1
               css={css`
                 font-size: 2rem;
-                margin-bottom: 4rem;
+                margin-top: 0rem;
+                margin-bottom: 2.5rem;
               `}
             >
               Michael Jewell
