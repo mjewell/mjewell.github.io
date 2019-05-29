@@ -1,6 +1,14 @@
 {
-  "name": "root",
+  "name": "mjewell.github.io",
   "private": true,
+  "homepage": "https://mjewell.github.io",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "predeploy": "lerna run predeploy",
+    "deploy": "lerna run deploy --scope=main"
+  },
   "devDependencies": {
     "lerna": "^3.14.1"
   }

@@ -1,8 +1,7 @@
 {
-  "name": "mjewell.github.io",
+  "name": "main",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://mjewell.github.io",
   "dependencies": {
     "@emotion/core": "^10.0.10",
     "@reach/router": "^1.2.1",
