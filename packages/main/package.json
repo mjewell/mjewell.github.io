@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@emotion/core": "^10.0.10",
+    "@mjewell/what-if-machine": "^0.1.0",
     "@reach/router": "^1.2.1",
     "@types/qs": "^6.5.3",
     "gh-pages": "^2.0.1",
@@ -13,7 +14,7 @@
     "react-icons": "^3.6.1",
     "react-media": "^1.9.2",
     "react-pose": "^4.0.8",
-    "react-scripts": "3.0.0",
+    "react-scripts": "3.0.1",
     "react-sidebar": "^3.0.2",
     "react-toggle": "^4.0.2",
     "typescript": "^3.4.5"
