@@ -1,4 +1,3 @@
-import { add } from './calculator';
-import { add as typedAdd } from './typedCalculator';
+import Recurrence from './Recurrence';
 
-export { add, typedAdd };
+export { Recurrence };
