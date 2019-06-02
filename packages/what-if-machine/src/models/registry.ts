@@ -2,7 +2,7 @@ import { observable, action } from 'mobx';
 import Account from './Account';
 import Transaction from './Transaction';
 
-class Registry {
+export default class Registry {
   @observable public accounts: { [key: string]: Account } = {};
 
   @observable public transactions: { [key: string]: Transaction } = {};
@@ -17,5 +17,3 @@ class Registry {
     this.transactions[transaction.id] = transaction;
   }
 }
-
-export default new Registry();

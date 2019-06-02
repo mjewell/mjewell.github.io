@@ -1,3 +1,3 @@
-import Recurrence from './Recurrence';
+import Dashboard from './components/pages/Dashboard';
 
-export { Recurrence };
+export { Dashboard };

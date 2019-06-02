@@ -4,6 +4,13 @@ import currency from 'currency.js';
 import uniqid from 'uniqid';
 import eachDay from '../utils/eachDay';
 
+interface Params {
+  amount: number | currency;
+  schedule: RRule;
+  fromAccountId: string;
+  toAccountId: string;
+}
+
 export default class Transaction {
   public id: string = uniqid();
 
@@ -15,12 +22,7 @@ export default class Transaction {
 
   @observable public toAccountId: string;
 
-  public constructor(
-    amount: number | currency,
-    schedule: RRule,
-    fromAccountId: string,
-    toAccountId: string
-  ) {
+  public constructor({ amount, schedule, fromAccountId, toAccountId }: Params) {
     this.amount = currency(amount);
     this.schedule = schedule;
     this.fromAccountId = fromAccountId;
