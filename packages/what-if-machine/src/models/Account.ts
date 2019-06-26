@@ -3,10 +3,12 @@ import currency from 'currency.js';
 import uniqid from 'uniqid';
 import { startOfDay } from 'date-fns';
 import Transaction from './Transaction';
-import Registry from './Registry';
+import Environment from './Environment';
+import { Omit } from '../utils/Omit';
 
-interface Params {
-  transactionRegistry: Registry;
+export interface Params {
+  environment: Environment;
+  isExternal?: boolean;
   name: string;
   initialBalance?: number | currency;
   initialBalanceDate?: Date | null;
@@ -16,7 +18,9 @@ interface Params {
 export default class Account {
   public id: string = uniqid();
 
-  public transactionRegistry: Registry;
+  public environment: Environment;
+
+  @observable public isExternal: boolean;
 
   @observable public name: string;
 
@@ -27,13 +31,15 @@ export default class Account {
   @observable public interestRate: currency;
 
   public constructor({
-    transactionRegistry,
+    environment,
+    isExternal = false,
     name,
     initialBalance = 0,
     initialBalanceDate = null,
     interestRate = 0
   }: Params) {
-    this.transactionRegistry = transactionRegistry;
+    this.environment = environment;
+    this.isExternal = isExternal;
     this.name = name;
     this.initialBalance = currency(initialBalance);
     this.initialBalanceDate = initialBalanceDate
@@ -44,14 +50,14 @@ export default class Account {
 
   @computed
   public get incomingTransactions(): Transaction[] {
-    return Object.values(this.transactionRegistry.transactions).filter(
+    return Object.values(this.environment.transactions).filter(
       (transaction): boolean => transaction.toAccountId === this.id
     );
   }
 
   @computed
   public get outgoingTransactions(): Transaction[] {
-    return Object.values(this.transactionRegistry.transactions).filter(
+    return Object.values(this.environment.transactions).filter(
       (transaction): boolean => transaction.fromAccountId === this.id
     );
   }
@@ -80,5 +86,15 @@ export default class Account {
     return this.initialBalance
       .add(balanceFromIncomingTransactions)
       .subtract(balanceFromOutgoingTransactions);
+  }
+
+  public serialize(): Omit<Params, 'environment'> {
+    return {
+      isExternal: this.isExternal,
+      name: this.name,
+      initialBalance: this.initialBalance,
+      initialBalanceDate: this.initialBalanceDate,
+      interestRate: this.interestRate
+    };
   }
 }

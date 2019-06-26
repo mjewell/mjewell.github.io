@@ -1,10 +1,14 @@
 import RRule from 'rrule';
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import currency from 'currency.js';
 import uniqid from 'uniqid';
 import eachDay from '../utils/eachDay';
+import Environment from './Environment';
+import Account from './Account';
+import { Omit } from '../utils/Omit';
 
-interface Params {
+export interface Params {
+  environment: Environment;
   amount: number | currency;
   schedule: RRule;
   fromAccountId: string;
@@ -14,6 +18,8 @@ interface Params {
 export default class Transaction {
   public id: string = uniqid();
 
+  public environment: Environment;
+
   @observable public amount: currency;
 
   @observable public schedule: RRule;
@@ -22,7 +28,14 @@ export default class Transaction {
 
   @observable public toAccountId: string;
 
-  public constructor({ amount, schedule, fromAccountId, toAccountId }: Params) {
+  public constructor({
+    environment,
+    amount,
+    schedule,
+    fromAccountId,
+    toAccountId
+  }: Params) {
+    this.environment = environment;
     this.amount = currency(amount);
     this.schedule = schedule;
     this.fromAccountId = fromAccountId;
@@ -63,8 +76,27 @@ export default class Transaction {
     this.fromAccountId = fromAccountId;
   }
 
+  @computed
+  public get fromAccount(): Account {
+    return this.environment.accounts[this.fromAccountId];
+  }
+
   @action.bound
   public setToAccountId(toAccountId: string): void {
     this.toAccountId = toAccountId;
+  }
+
+  @computed
+  public get toAccount(): Account {
+    return this.environment.accounts[this.toAccountId];
+  }
+
+  public serialize(): Omit<Params, 'environment'> {
+    return {
+      amount: this.amount,
+      schedule: this.schedule,
+      fromAccountId: this.fromAccountId,
+      toAccountId: this.toAccountId
+    };
   }
 }
