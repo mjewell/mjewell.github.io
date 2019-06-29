@@ -1,6 +1,8 @@
 import { computed } from 'mobx';
 import currency from 'currency.js';
 import Environment from './Environment';
+import Account from './Account';
+import AccountDiff from './AccountDiff';
 
 interface Params {
   beforeEnvironment: Environment;
@@ -31,27 +33,46 @@ export default class Diff {
   }
 
   @computed
-  public get beforeNetWorth(): currency {
-    return Object.values(this.beforeEnvironment.accounts)
-      .filter((account): boolean => !account.isExternal)
-      .reduce(
-        (sum, account): currency => sum.add(account.balanceOn(this.endDate)),
-        currency(0)
-      );
-  }
-
-  @computed
-  public get afterNetWorth(): currency {
-    return Object.values(this.afterEnvironment.accounts)
-      .filter((account): boolean => !account.isExternal)
-      .reduce(
-        (sum, account): currency => sum.add(account.balanceOn(this.endDate)),
-        currency(0)
-      );
-  }
-
-  @computed
   public get netWorthDifference(): currency {
-    return this.afterNetWorth.subtract(this.beforeNetWorth);
+    return this.afterEnvironment
+      .netWorthAt(this.endDate)
+      .subtract(this.beforeEnvironment.netWorthAt(this.endDate));
   }
+
+  @computed
+  public get newAccounts(): Account[] {
+    const afterAccounts = Object.values(this.afterEnvironment.accounts);
+    return afterAccounts.filter(
+      (account): boolean => !(account.id in this.beforeEnvironment.accounts)
+    );
+  }
+
+  @computed
+  public get removedAccounts(): Account[] {
+    const beforeAccounts = Object.values(this.beforeEnvironment.accounts);
+    return beforeAccounts.filter(
+      (account): boolean => !(account.id in this.afterEnvironment.accounts)
+    );
+  }
+
+  @computed
+  public get sharedAccountDiffs(): AccountDiff[] {
+    const beforeAccounts = Object.values(this.beforeEnvironment.accounts);
+    return beforeAccounts
+      .filter(
+        (account): boolean => account.id in this.afterEnvironment.accounts
+      )
+      .map(
+        (account): AccountDiff =>
+          new AccountDiff({
+            beforeAccount: this.beforeEnvironment.accounts[account.id],
+            afterAccount: this.afterEnvironment.accounts[account.id],
+            startDate: this.startDate,
+            endDate: this.endDate
+          })
+      );
+  }
+
+  // new/removed transactions
+  // transaction changes
 }

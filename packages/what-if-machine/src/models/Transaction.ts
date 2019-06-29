@@ -9,6 +9,7 @@ import { Omit } from '../utils/Omit';
 
 export interface Params {
   environment: Environment;
+  id?: string;
   amount: number | currency;
   schedule: RRule;
   fromAccountId: string;
@@ -16,7 +17,7 @@ export interface Params {
 }
 
 export default class Transaction {
-  public id: string = uniqid();
+  public id: string;
 
   public environment: Environment;
 
@@ -30,16 +31,28 @@ export default class Transaction {
 
   public constructor({
     environment,
+    id = uniqid(),
     amount,
     schedule,
     fromAccountId,
     toAccountId
   }: Params) {
     this.environment = environment;
+    this.id = id;
     this.amount = currency(amount);
     this.schedule = schedule;
     this.fromAccountId = fromAccountId;
     this.toAccountId = toAccountId;
+  }
+
+  public serialize(): Omit<Params, 'environment'> {
+    return {
+      id: this.id,
+      amount: this.amount,
+      schedule: this.schedule,
+      fromAccountId: this.fromAccountId,
+      toAccountId: this.toAccountId
+    };
   }
 
   public occurrences(startDate: Date, endDate: Date): Date[] {
@@ -89,14 +102,5 @@ export default class Transaction {
   @computed
   public get toAccount(): Account {
     return this.environment.accounts[this.toAccountId];
-  }
-
-  public serialize(): Omit<Params, 'environment'> {
-    return {
-      amount: this.amount,
-      schedule: this.schedule,
-      fromAccountId: this.fromAccountId,
-      toAccountId: this.toAccountId
-    };
   }
 }

@@ -15,8 +15,8 @@ const checkingAccount = environment.createAccount({
   initialBalanceDate: new Date()
 });
 
-const savingAccount = environment.createAccount({
-  name: 'Saving',
+const savingsAccount = environment.createAccount({
+  name: 'Savings',
   interestRate: 4
 });
 
@@ -31,9 +31,9 @@ const salary = environment.createTransaction({
 
 const afterEnvironment = environment.clone();
 
-Object.values(afterEnvironment.transactions)[0].setAmount(3500);
+Object.values(afterEnvironment.transactions)[0].setAmount(4000);
 const afterSavings = Object.values(afterEnvironment.accounts).find(
-  (account): boolean => account.name === 'Saving'
+  (account): boolean => account.name === 'Savings'
 );
 
 if (!afterSavings) {
@@ -42,6 +42,12 @@ if (!afterSavings) {
 
 Object.values(afterEnvironment.transactions)[0].setToAccountId(afterSavings.id);
 
+afterEnvironment.createAccount({
+  name: 'some new account'
+});
+
+afterEnvironment.removeAccount(checkingAccount.id);
+
 const diff = new Diff({
   beforeEnvironment: environment,
   afterEnvironment,
@@ -49,10 +55,22 @@ const diff = new Diff({
   endDate: new Date('2020-01-01')
 });
 
-console.log(checkingAccount.balanceOn(new Date('2019-08-01')).format());
-console.log(externalAccount.balanceOn(new Date('2019-08-01')).format());
-console.log(diff.beforeNetWorth.format());
-console.log(diff.afterNetWorth.format());
 console.log(diff.netWorthDifference.format());
+console.log(diff.newAccounts.map((a): string => a.name));
+console.log(diff.removedAccounts.map((a): string => a.name));
+console.log(diff.sharedAccountDiffs.map((d): string => d.beforeAccount.name));
+console.log(
+  diff.sharedAccountDiffs.map(
+    (d): string => d.beforeAccount.balanceOn(d.endDate).format()
+  )
+);
+console.log(
+  diff.sharedAccountDiffs.map(
+    (d): string => d.afterAccount.balanceOn(d.endDate).format()
+  )
+);
+console.log(
+  diff.sharedAccountDiffs.map((d): string => d.balanceDifference.format())
+);
 
 export default (): JSX.Element => <div>hello</div>;

@@ -8,6 +8,7 @@ import { Omit } from '../utils/Omit';
 
 export interface Params {
   environment: Environment;
+  id?: string;
   isExternal?: boolean;
   name: string;
   initialBalance?: number | currency;
@@ -16,7 +17,7 @@ export interface Params {
 }
 
 export default class Account {
-  public id: string = uniqid();
+  public id: string;
 
   public environment: Environment;
 
@@ -32,6 +33,7 @@ export default class Account {
 
   public constructor({
     environment,
+    id = uniqid(),
     isExternal = false,
     name,
     initialBalance = 0,
@@ -39,6 +41,7 @@ export default class Account {
     interestRate = 0
   }: Params) {
     this.environment = environment;
+    this.id = id;
     this.isExternal = isExternal;
     this.name = name;
     this.initialBalance = currency(initialBalance);
@@ -46,6 +49,17 @@ export default class Account {
       ? startOfDay(initialBalanceDate)
       : null;
     this.interestRate = currency(interestRate);
+  }
+
+  public serialize(): Omit<Params, 'environment'> {
+    return {
+      id: this.id,
+      isExternal: this.isExternal,
+      name: this.name,
+      initialBalance: this.initialBalance,
+      initialBalanceDate: this.initialBalanceDate,
+      interestRate: this.interestRate
+    };
   }
 
   @computed
@@ -86,15 +100,5 @@ export default class Account {
     return this.initialBalance
       .add(balanceFromIncomingTransactions)
       .subtract(balanceFromOutgoingTransactions);
-  }
-
-  public serialize(): Omit<Params, 'environment'> {
-    return {
-      isExternal: this.isExternal,
-      name: this.name,
-      initialBalance: this.initialBalance,
-      initialBalanceDate: this.initialBalanceDate,
-      interestRate: this.interestRate
-    };
   }
 }
