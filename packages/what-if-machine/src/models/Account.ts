@@ -1,104 +1,83 @@
-import { observable, computed } from 'mobx';
 import currency from 'currency.js';
 import uniqid from 'uniqid';
 import { startOfDay } from 'date-fns';
-import Transaction from './Transaction';
-import Environment from './Environment';
-import { Omit } from '../utils/Omit';
+import { total } from './Transaction';
+import registry from './registry';
+import { Account, Environment, Transaction } from './Types';
+import { getTransactions } from './Environment';
 
 export interface Params {
-  environment: Environment;
   id?: string;
+  environmentId: Environment['id'];
   isExternal?: boolean;
   name: string;
-  initialBalance?: number | currency;
+  initialBalance?: number;
   initialBalanceDate?: Date | null;
-  interestRate?: number | currency;
+  interestRate?: number;
 }
 
-export default class Account {
-  public id: string;
-
-  public environment: Environment;
-
-  @observable public isExternal: boolean;
-
-  @observable public name: string;
-
-  @observable public initialBalance: currency;
-
-  @observable public initialBalanceDate: Date | null;
-
-  @observable public interestRate: currency;
-
-  public constructor({
-    environment,
-    id = uniqid(),
-    isExternal = false,
+export function createAccount({
+  id = uniqid(),
+  environmentId,
+  isExternal = false,
+  name,
+  initialBalance = 0,
+  initialBalanceDate = null,
+  interestRate = 0
+}: Params): Account {
+  const account = {
+    id,
+    environmentId,
+    isExternal,
     name,
-    initialBalance = 0,
-    initialBalanceDate = null,
-    interestRate = 0
-  }: Params) {
-    this.environment = environment;
-    this.id = id;
-    this.isExternal = isExternal;
-    this.name = name;
-    this.initialBalance = currency(initialBalance);
-    this.initialBalanceDate = initialBalanceDate
+    initialBalance,
+    initialBalanceDate: initialBalanceDate
       ? startOfDay(initialBalanceDate)
-      : null;
-    this.interestRate = currency(interestRate);
-  }
+      : null,
+    interestRate
+  };
+  registry.registerAccount(account);
+  return account;
+}
 
-  public serialize(): Omit<Params, 'environment'> {
-    return {
-      id: this.id,
-      isExternal: this.isExternal,
-      name: this.name,
-      initialBalance: this.initialBalance,
-      initialBalanceDate: this.initialBalanceDate,
-      interestRate: this.interestRate
-    };
-  }
+function getEnvironment(account: Account): Environment {
+  return registry.getEnvironment(account.environmentId);
+}
 
-  @computed
-  public get incomingTransactions(): Transaction[] {
-    return Object.values(this.environment.transactions).filter(
-      (transaction): boolean => transaction.toAccountId === this.id
+export function incomingTransactions(account: Account): Transaction[] {
+  return getTransactions(getEnvironment(account)).filter(
+    (transaction): boolean => transaction.toAccountId === account.id
+  );
+}
+
+export function outgoingTransactions(account: Account): Transaction[] {
+  return getTransactions(getEnvironment(account)).filter(
+    (transaction): boolean => transaction.fromAccountId === account.id
+  );
+}
+
+export function balanceOn(account: Account, date: Date): currency {
+  const startDate = account.initialBalanceDate || new Date('2000-01-01');
+
+  if (date < startDate) {
+    throw new Error(
+      'Cannot calculate balance from before initial balance date'
     );
   }
 
-  @computed
-  public get outgoingTransactions(): Transaction[] {
-    return Object.values(this.environment.transactions).filter(
-      (transaction): boolean => transaction.fromAccountId === this.id
-    );
-  }
+  const balanceFromIncomingTransactions = incomingTransactions(account).reduce(
+    (sum, transaction): currency =>
+      sum.add(total(transaction, startDate, date)),
+    currency(0)
+  );
 
-  public balanceOn(date: Date): currency {
-    const startDate = this.initialBalanceDate || new Date('2000-01-01');
+  const balanceFromOutgoingTransactions = outgoingTransactions(account).reduce(
+    (sum, transaction): currency =>
+      sum.add(total(transaction, startDate, date)),
+    currency(0)
+  );
 
-    if (date < startDate) {
-      throw new Error(
-        'Cannot calculate balance from before initial balance date'
-      );
-    }
-
-    const balanceFromIncomingTransactions = this.incomingTransactions.reduce(
-      (sum, transaction): currency =>
-        sum.add(transaction.total(startDate, date)),
-      currency(0)
-    );
-
-    const balanceFromOutgoingTransactions = this.outgoingTransactions.reduce(
-      (sum, transaction): currency =>
-        sum.add(transaction.total(startDate, date)),
-      currency(0)
-    );
-
-    return this.initialBalance
-      .add(balanceFromIncomingTransactions)
-      .subtract(balanceFromOutgoingTransactions);
-  }
+  return currency(account.initialBalance)
+    .add(balanceFromIncomingTransactions)
+    .subtract(balanceFromOutgoingTransactions);
 }
